@@ -115,72 +115,56 @@
 ## Basic architecture
 
 ### MVC architecture
+Model-View-Controller
+
 Most web framework use this, but not django
 
+- Controller: intercepts user requests.
+- Model: data definitions, processing logic, interaction with database 
+- View: presentation layer, placement and formatting, sends result to controller
+
 ```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+graph LR;
+    Client-->Controller;
+    Controller-->Client;
+    Controller-->View;
+    Controller-->Model;
+    View-->Controller;
+    View-->Model;
+    Model-->View;
+    Model-->Database;
+    Database-->Model;
 ```
 
-```geojson
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "id": 1,
-      "properties": {
-        "ID": 0
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-              [-90,35],
-              [-90,30],
-              [-85,30],
-              [-85,35],
-              [-90,35]
-          ]
-        ]
-      }
-    }
-  ]
-}
+### MVT architecture
+Model-View-Template
+
+Slight variation on the MVC
+
+- Model: data layer
+- View: processing logic
+- Template: presentation layer
+
+```mermaid
+graph LR;
+    User-->URL;
+    URL-->User;
+    URL-->View;
+    View-->URL;
+    View-->Model;
+    Model-->View;
+    View-->Template;
+    Template-->View;
 ```
 
-```stl
-solid cube_corner
-  facet normal 0.0 -1.0 0.0
-    outer loop
-      vertex 0.0 0.0 0.0
-      vertex 1.0 0.0 0.0
-      vertex 0.0 0.0 1.0
-    endloop
-  endfacet
-  facet normal 0.0 0.0 -1.0
-    outer loop
-      vertex 0.0 0.0 0.0
-      vertex 0.0 1.0 0.0
-      vertex 1.0 0.0 0.0
-    endloop
-  endfacet
-  facet normal -1.0 0.0 0.0
-    outer loop
-      vertex 0.0 0.0 0.0
-      vertex 0.0 0.0 1.0
-      vertex 0.0 1.0 0.0
-    endloop
-  endfacet
-  facet normal 0.577 0.577 0.577
-    outer loop
-      vertex 1.0 0.0 0.0
-      vertex 0.0 1.0 0.0
-      vertex 0.0 0.0 1.0
-    endloop
-  endfacet
-endsolid
-```
+URL dispatcher:
+- eqivalent to controller in MVC
+- ```urls.py``` acts as dispathcer
+    - defines URL patterns
+    - a pattern is mapped with a view function
+
+View:
+- ```views.py```: created View definitions
+- reads path, query, body parameters from requests
+- interacts with model to perform CRUD operations
+
