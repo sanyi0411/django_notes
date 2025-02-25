@@ -129,7 +129,6 @@ graph LR;
     Controller-->Client;
     Controller-->View;
     Controller-->Model;
-    View-->Controller;
     View-->Model;
     Model-->View;
     Model-->Database;
