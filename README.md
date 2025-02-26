@@ -125,7 +125,7 @@ Most web framework use this, but not django
 
 ```mermaid
 flowchart LR;
-    id1 [(Database)];
+    id1[(Database)];
     Client-- Request -->Controller;
     Controller-- Response -->Client;
     Controller-->View;
