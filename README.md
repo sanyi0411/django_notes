@@ -127,14 +127,12 @@ Most web framework use this, but not django
 flowchart LR;
     Client-- Request -->Controller;
     Controller-- Response -->Client;
-    subgraph
     Controller-->View;
     Controller-->Model;
     View-->Model;
     Model-->View;
-    end
-    Model-->Database;
-    Database-->Model;
+    Model-->[(Database)];
+    [(Database)]-->Model;
 ```
 
 ### MVT architecture
