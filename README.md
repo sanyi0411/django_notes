@@ -124,15 +124,17 @@ Most web framework use this, but not django
 - View: presentation layer, placement and formatting, sends result to controller
 
 ```mermaid
-graph LR;
-    Client-->Controller;
-    Controller-->Client;
+flowchart LR;
+    Client-- Request -->Controller;
+    Controller-- Response -->Client;
+    subgraph
     Controller-->View;
     Controller-->Model;
     View-->Model;
     Model-->View;
-    Model-->Database;
-    Database-->Model;
+    end
+    Model-->[(Database)];
+    [(Database)]-->Model;
 ```
 
 ### MVT architecture
@@ -166,4 +168,14 @@ View:
 - ```views.py```: created View definitions
 - reads path, query, body parameters from requests
 - interacts with model to perform CRUD operations
+- uses the client's and model's data and renders its response using a template
 
+Model:
+- ```models.py``` holds one or more model classes
+- attributes of model class --> construct database table of matching structure
+- view uses the client's and the model's data and renders its response using a template
+
+Template:
+- in the ```templates``` folder with the ```.html``` extension
+- it is a webpage
+- mix of static HTML and Django Template Language blocks
