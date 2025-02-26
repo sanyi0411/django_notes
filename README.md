@@ -125,14 +125,15 @@ Most web framework use this, but not django
 
 ```mermaid
 flowchart LR;
+    id1 [(Database)];
     Client-- Request -->Controller;
     Controller-- Response -->Client;
     Controller-->View;
     Controller-->Model;
     View-->Model;
     Model-->View;
-    Model-->[(Database)];
-    [(Database)]-->Model;
+    Model-->id1;
+    id1-->Model;
 ```
 
 ### MVT architecture
