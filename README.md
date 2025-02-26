@@ -147,7 +147,7 @@ Slight variation on the MVC
 
 ```mermaid
 graph LR;
-    User-->URL;
+    User((User))-->URL;
     URL-->User;
     URL-->View;
     View-->URL;
@@ -168,6 +168,7 @@ View:
 - reads path, query, body parameters from requests
 - interacts with model to perform CRUD operations
 - uses the client's and model's data and renders its response using a template
+- returns response to user
 
 Model:
 - ```models.py``` holds one or more model classes
@@ -176,5 +177,7 @@ Model:
 
 Template:
 - in the ```templates``` folder with the ```.html``` extension
-- it is a webpage
+- a template is a webpage
 - mix of static HTML and Django Template Language blocks
+- template preprocessor uses context data from View inserted in these blocks to formulate response
+- View returns this response to the user
