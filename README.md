@@ -133,8 +133,8 @@ flowchart LR;
     View-->Model;
     Model-->View;
     end
-    Model-->[(Database)];
-    [(Database)]-->Model;
+    Model-->Database;
+    Database-->Model;
 ```
 
 ### MVT architecture
