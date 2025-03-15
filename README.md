@@ -181,3 +181,83 @@ Template:
 - mix of static HTML and Django Template Language blocks
 - template preprocessor uses context data from View inserted in these blocks to formulate response
 - View returns this response to the user
+
+## Views and URLs
+
+### View function
+
+The function in the ```view.py``` (a.k.a view function):
+ - fetches data from the client's request
+    - takes a HttpRequest as parameter
+ - applies a certain processing logic
+ - sends the appropriate response back to the client
+    - returns HttpResponse object
+
+
+Function based view:
+```python
+# views.py (app)
+from django.http import HttpResponse
+
+def home(request):
+    # some logic
+    return HTTPResponse("Welcome to Little Lemon restaurant")
+
+def myview(request):
+    if request.method == 'GET':
+        val = request.GET['key']
+        # some logic
+    
+    if request.method == 'POST':
+        val = request.POST['key']
+        # some logic
+```
+
+Class based view:
+```python
+# views.py (app)
+from django.http import HttpResponse
+from django.views import View 
+
+class MyView(View): 
+    def get(self, request): 
+        # logic to process GET request
+        return HttpResponse('response to GET request') 
+ 
+    def post(self, request): 
+        # <logic to process POST request> 
+        return HttpResponse('response to POST request')
+```
+
+
+
+### Routing
+
+The ```urls.py``` file:
+ - mapping a view function to a URL
+ - it is good practice to create a ```urls.py``` in the app folder and include it in the project's ```urls.py```. This way the respective URLs for an app are clustered
+    - in this case create a ```urls.py``` in the ```myapp``` folder
+ - when a user makes a request, it is first handled by the ```urls.py``` at the project level
+    - the project level ```urls.py``` will have to include the app level ```urls.py```
+
+
+ ```python
+# urls.py (project)
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('myapp.urls'))
+]
+ ```
+
+```python
+# urls.py (app)
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name="home"),
+]
+```
