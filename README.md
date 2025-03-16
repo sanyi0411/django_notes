@@ -320,3 +320,118 @@ How a request is processed:
 2. Looks for the ```urlpattern``` variable
 3. Django runs through each URL pattern and stops at the first that matches the requested URL
 4. Django loads and calls the given view
+
+## Parameters
+
+### Path parameter
+
+The client browser sends data along with the URL itself.
+
+[http://example.com/getuser/John/](http://example.com/getuser/John/)
+</br>
+[http://example.com/getitem/42/](http://example.com/getitem/42/)
+</br>
+[http://example.com/getarticle/title_of_article/](http://example.com/getarticle/title_of_article/)
+</br>
+[http://example.com/getarticle/2025/](http://example.com/getarticle/2025/)
+</br>
+[http://example.com/getarticle/2025/03/](http://example.com/getarticle/2025/03/)
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('getuser/admin/', views.special_case_admin),
+    path('getuser/<str:name>/', views.user_details),
+
+    path('getitem/<int:id>', views.item_details),
+
+    path('getarticle/<slug:title>', views.article_details),
+
+    path('getarticle/<int:year>', views.article_year_archive),
+    path('getarticle/<int:year>/<int_month>/', views.article_month_archive),
+]
+```
+
+The URL pattern treats the identifiers in angular brackets (<..>) as the path parameters
+
+[http://example.com/getarticle/2025/](http://example.com/getarticle/2025/)
+    
+- will call ```view.article_year_archive(request, year=2025)```
+
+[http://example.com/getarticle/2025/03/](http://example.com/getarticle/2025/03/)
+
+- will call ```article_month_archive(request, year=2025, month=03")```
+
+
+```python
+# views.py
+from django.http import HttpResponse 
+
+def article_year_archive(request, year): 
+    return HttpResponse("Some response")
+
+def article_month_archive(request, year, month): 
+    return HttpResponse("Some response")
+```
+
+### Query parameters
+
+A query string is a sequence of one or more key=value pairs concatenated by the ```&``` symbol.
+
+The key-value pairs in the query string are added to the ```request.GET``` property.
+
+[http://example.com/getuser/?name=John&id=1](http://example.com/getuser/?name=John&id=1)
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('getuser/', views.queryview),
+]
+```
+
+```python
+# views.py
+from django.http import HttpResponse 
+
+def queryview(request):
+    name = request.GET['name']
+    id = request.GET['id']
+    return HttpResponse("Name:{} UserID:{}".format(name, id)) 
+```
+
+### Body parameters
+
+An HTML form sends the data to the URL mentioned in its action attribute using the POST method.
+
+The POST method is a more secure way of sending data than the GET method because the data is not revealed in the URL.
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("showform/", views.showform, name="showform"),
+    path("getform/", views.getform, name='getform'),
+]
+```
+
+```python
+# views.py
+from django.http import HttpResponse 
+
+def showform(request): 
+    return render(request, "form.html")
+
+def getform(request): 
+    if request.method == "POST": 
+        id=request.POST['id'] 
+        name=request.POST['name'] 
+    return HttpResponse("Name:{} UserID:{}".format(name, id))
+```
