@@ -313,4 +313,10 @@ def myview(request):
     response500 = HttpResponseServerError('500 Server Error')
 ```
 
+## Request processing
 
+How a request is processed:
+1. Django loads the root URLconf (if not set differently)
+2. Looks for the ```urlpattern``` variable
+3. Django runs through each URL pattern and stops at the first that matches the requested URL
+4. Django loads and calls the given view
