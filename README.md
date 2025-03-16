@@ -271,12 +271,12 @@ def myview(request):
 
 # --------------Request--------------------
     path = request.path
-    scheme = request.scheme # aka protocol
+    scheme = request.scheme # a.k.a protocol
     method = request.method
+    path_info = request.path_info
     all_headers = request.META
     address = request.META['REMOTE_ADDR']
     user_agent = request.META['HTTP_USER_AGENT']
-    path_info = request.path_info
     cookies = request.COOKIES
     cookie_value = request.COOKIES.get("my_cookie")
     files = request.FILES
@@ -302,7 +302,7 @@ def myview(request):
             'Content-Disposition': 'attachment; filename="dummy.json"',
         }
 
-    response = HttpResponse('Response with cookie')
+    response_with_cookie = HttpResponse('Response with cookie')
     response.set_cookie('my_cookie', 'cookie_value')
     response.content += f" Cookie value: {cookie_value}"
 
@@ -311,5 +311,6 @@ def myview(request):
     response404 = HttpResponseNotFound('404 Not Found')
     response405 = HttpResponseNotAllowed('405 Not allowed')
     response500 = HttpResponseServerError('500 Server Error')
-
 ```
+
+
