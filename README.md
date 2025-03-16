@@ -260,3 +260,56 @@ urlpatterns = [
     path('', views.home, name="home"),
 ]
 ```
+
+## Request and Response objects
+
+```python
+# views.py (app)
+from django.http import HttpResponse
+
+def myview(request):
+
+# --------------Request--------------------
+    path = request.path
+    scheme = request.scheme # aka protocol
+    method = request.method
+    all_headers = request.META
+    address = request.META['REMOTE_ADDR']
+    user_agent = request.META['HTTP_USER_AGENT']
+    path_info = request.path_info
+    cookies = request.COOKIES
+    cookie_value = request.COOKIES.get("my_cookie")
+    files = request.FILES
+
+    if request.method == 'GET':
+        val = request.GET['key']
+    
+    if request.method == 'POST':
+        val = request.POST['key']
+    
+    if request.user.is_authenticated():
+        username = request.user.username
+        email = request.user.email
+
+# --------------Response--------------------
+    plain_text_response = HttpResponse('This is some text.', content_type='text/plain') 
+
+    json_data = {'dummy_key': 'dummy_value'}
+    json_response1 = HttpResponse(
+        json_data,
+        headers={
+            'Content-Type': 'application/json',
+            'Content-Disposition': 'attachment; filename="dummy.json"',
+        }
+
+    response = HttpResponse('Response with cookie')
+    response.set_cookie('my_cookie', 'cookie_value')
+    response.content += f" Cookie value: {cookie_value}"
+
+    response400 = HttpResponseBadRequest('400 Bad Request')
+    response403 = HttpResponseForbidden('403 Forbidden')
+    response404 = HttpResponseNotFound('404 Not Found')
+    response405 = HttpResponseNotAllowed('405 Not allowed')
+    response500 = HttpResponseServerError('500 Server Error')
+
+```
