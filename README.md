@@ -182,6 +182,16 @@ Template:
 - template preprocessor uses context data from View inserted in these blocks to formulate response
 - View returns this response to the user
 
+## Request - Response cycle
+
+1. User enters URL in the web browser
+2. URL is sent to the server
+3. Server searches for this URL in the ```urls.py``` file
+4. Server matches URL to associated view
+5. View function receives the HTTP request as a ```HttpRequest``` object
+6. View function defines the appropriate response
+7. View functions sends back the response as a ```HttpResponse``` object
+
 ## Views and URLs
 
 ### View function
@@ -201,16 +211,7 @@ from django.http import HttpResponse
 
 def home(request):
     # some logic
-    return HTTPResponse("Welcome to Little Lemon restaurant")
-
-def myview(request):
-    if request.method == 'GET':
-        val = request.GET['key']
-        # some logic
-    
-    if request.method == 'POST':
-        val = request.POST['key']
-        # some logic
+    return HttpResponse("Welcome to Little Lemon restaurant")
 ```
 
 Class based view:
@@ -225,16 +226,14 @@ class MyView(View):
         return HttpResponse('response to GET request') 
  
     def post(self, request): 
-        # <logic to process POST request> 
+        # logic to process POST request 
         return HttpResponse('response to POST request')
 ```
-
-
 
 ### Routing
 
 The ```urls.py``` file:
- - mapping a view function to a URL
+ - contains mapping view functions to a URLs
  - it is good practice to create a ```urls.py``` in the app folder and include it in the project's ```urls.py```. This way the respective URLs for an app are clustered
     - in this case create a ```urls.py``` in the ```myapp``` folder
  - when a user makes a request, it is first handled by the ```urls.py``` at the project level
