@@ -321,6 +321,69 @@ How a request is processed:
 3. Django runs through each URL pattern and stops at the first that matches the requested URL
 4. Django loads and calls the given view
 
+## Naming URL patterns
+
+### Without naming
+
+The URL path, in your URLconf, is not named:
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('home/', views.index),
+
+]
+```
+
+If you want to reference this path, in your template you would use a hard coded reference:
+
+```html
+<a href="/home">Home</a>
+```
+
+Path can change during development. Lets say ```home``` is renamed to ```index```:
+
+```diff
+- path('home/', views.index),
++ path('index/', views.index),
+```
+
+Now the previously created ```<a>``` tag, where ```/home``` is referenced, is broken because [http://example.com/home](http://example.com/home) does not exist. It will return a ```404 Page not found``` error. You would have to find and change all the templates where it is referenced.
+
+### With URL naming
+
+You name your URL path:
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('home/', views.index, name='index'),
+
+]
+```
+
+In your template you use a template tag:
+```html
+<a href="{% url 'index' %}">Home</a>
+```
+
+Now in your URLconf you can use either
+
+```python
+path('home/', views.index, name='index'),
+```
+or
+```python
+path('index/', views.index, name='index'),
+```
+or any other route, all will work because in the ```<a>``` tag the name of the URL is referenced and the name did not change.
+
 ## Parameters
 
 ### Path parameter
