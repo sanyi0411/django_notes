@@ -206,7 +206,7 @@ The function in the ```view.py``` (a.k.a view function):
 
 Function based view:
 ```python
-# views.py (app)
+# app/views.py
 from django.http import HttpResponse
 
 def home(request):
@@ -216,7 +216,7 @@ def home(request):
 
 Class based view:
 ```python
-# views.py (app)
+# app/views.py
 from django.http import HttpResponse
 from django.views import View 
 
@@ -240,8 +240,8 @@ The ```urls.py``` file:
     - the project level ```urls.py``` will have to include the app level ```urls.py```
 
 
- ```python
-# urls.py (project)
+```python
+# project/urls.py
 from django.contrib import admin
 from django.urls import path, include
 
@@ -249,10 +249,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myapp.urls'))
 ]
- ```
+```
 
 ```python
-# urls.py (app)
+# app/urls.py
 from django.urls import path
 from . import views
 
@@ -264,7 +264,7 @@ urlpatterns = [
 ## Request and Response objects
 
 ```python
-# views.py (app)
+# app/views.py
 from django.http import HttpResponse
 
 def myview(request):
@@ -509,4 +509,75 @@ from . import views
 urlpatterns = [
     path(r'^menu_item/[0-9]{2}/$', views.showform, name="showform"),
 ]
+```
+
+## Namespaces
+
+It is possible to have view functions with the same name if they are in different apps. This is where the namespace comes in. 
+
+### Defining a namespace
+
+To declare a namespace define the ```app_name``` variable in the app's ```urls.py```. From then on, the views in this app are identified by the namespace.
+
+Lets say we have 2 apps in our project and both have an ```index()``` view function.
+
+```python
+# oldapp/urls.py
+from django.urls import path
+from . import views
+
+app_name = 'oldapp'
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+```
+
+```python
+# newapp/urls.py
+from django.urls import path
+from . import views
+
+app_name = 'newapp'
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+```
+
+### Using a namespace
+
+Now in the project level ```urls.py``` you can use the ```namespace``` argument in the ```path()``` function
+
+```python
+# project/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('oldapp/', include('oldapp.urls', namespace='oldapp')),
+    path('newapp/', include('newapp.urls', namespace='newapp')),
+]
+```
+
+The ```reverse()``` function returns the URL path to which a view is mapped.
+
+```python
+>>> from django.urls import reverse 
+>>> reverse('newapp:index') 
+'/newapp/'
+>>> reverse('oldapp:index') 
+'/oldapp/' 
+```
+
+You can redirect a user to a view within another app.
+
+```python
+from django.http import HttpResponsePermanentRedirect 
+from django.urls import reverse 
+  
+def myview(request): 
+    .... 
+    return HttpResponsePermanentRedirect(reverse('demoapp:login'))
 ```
