@@ -498,3 +498,15 @@ def getform(request):
         name=request.POST['name'] 
     return HttpResponse("Name:{} UserID:{}".format(name, id))
 ```
+
+## Regular expressions in Django
+
+```python
+# urls.py
+from django.urls import path, re_path
+from . import views
+
+urlpatterns = [
+    path(r'^menu_item/[0-9]{2}/$', views.showform, name="showform"),
+]
+```
